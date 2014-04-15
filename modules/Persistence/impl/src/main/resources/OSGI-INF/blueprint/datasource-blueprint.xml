@@ -1,0 +1,16 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0">
+
+    <!--Postgres DataSource Service-->
+    <bean id="PostgresDataSource" class="org.postgresql.ds.PGPoolingDataSource" destroy-method="close">
+        <property name="serverName" value="localhost:5432/X_Platform_1.0.0"/>
+        <property name="user" value="postgres"/>
+        <property name="password" value="postgres"/>
+        <property name="dataSourceName" value="PostgresConnectionPool"/>
+    </bean>
+    <service id="PostgresDataSourceService" interface="javax.sql.DataSource" ref="PostgresDataSource">
+        <service-properties>
+            <entry key="osgi.jndi.service.name" value="jdbc/postgresds"/>
+        </service-properties>
+    </service>
+
+</blueprint>

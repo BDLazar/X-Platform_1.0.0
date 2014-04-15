@@ -1,0 +1,43 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:jaxrs="http://cxf.apache.org/blueprint/jaxrs"
+           xmlns:cxf="http://cxf.apache.org/blueprint/core"
+           xsi:schemaLocation="
+             http://www.osgi.org/xmlns/blueprint/v1.0.0
+             http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+             http://cxf.apache.org/blueprint/jaxrs
+             http://cxf.apache.org/schemas/blueprint/jaxrs.xsd
+             http://cxf.apache.org/blueprint/core
+             http://cxf.apache.org/schemas/blueprint/core.xsd">
+
+    <!--Json provider Bean (loaded dynamicaly)-->
+    <bean id="JsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+
+    <!--Authentication Rest Resource Bean-->
+    <bean id="AuthenticationResource" class="AuthenticationRest.AuthenticationResource">
+        <argument ref="AuthenticationService"/>
+    </bean>
+
+    <!--Reference to Authentication Service already registered with OSGI Service registry-->
+    <reference id="AuthenticationService" interface="AuthenticationApi.IAuthenticationService"/>
+
+    <!--Initialise rest cxf bus-->
+    <cxf:bus>
+        <cxf:features>
+            <cxf:logging/>
+        </cxf:features>
+    </cxf:bus>
+
+    <!--Authentication Rest End Point-->
+    <jaxrs:server id="AuthenticationRestEndPoint" address="/x-platform/authentication">
+        <!--Rest Resource Implementations for this end point-->
+        <jaxrs:serviceBeans>
+            <ref component-id="AuthenticationResource"/>
+        </jaxrs:serviceBeans>
+        <!--Serialisation Provider for this end point-->
+        <jaxrs:providers>
+            <ref component-id="JsonProvider"/>
+        </jaxrs:providers>
+    </jaxrs:server>
+
+</blueprint>

@@ -1,0 +1,7 @@
+#-----------------------------------------------------------------
+# Use this file to add customized Bnd instructions for the bundle
+#-----------------------------------------------------------------
+Export-Package: PersistenceImpl
+Import-Package: *
+DynamicImport-Package: org.hibernate.proxy,javassist.util.proxy,javax.sql,org.postgresql.ds
+

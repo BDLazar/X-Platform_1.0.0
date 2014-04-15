@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:jpa="http://aries.apache.org/xmlns/jpa/v1.1.0"
+           xmlns:tx="http://aries.apache.org/xmlns/transactions/v1.0.0">
+
+    <!--Authentication Service-->
+    <service id="AuthenticationService" interface="AuthenticationApi.IAuthenticationService">
+        <bean class="AuthenticationImpl.AuthenticationService">
+            <argument ref="AuthenticationDAO"/>
+        </bean>
+    </service>
+
+    <!--Authentication DAO-->
+    <bean id="AuthenticationDAO" class="AuthenticationImpl.AuthenticationDAO">
+        <jpa:context unitname="postgresPU"/>            <!--Inject Postgres Database context into constructor as an entity Manager-->
+        <tx:transaction method="*" value="Required"/>   <!--Inject transactional aspect into all methods with a required scope-->
+    </bean>
+
+
+</blueprint>
