@@ -10,16 +10,17 @@
              http://cxf.apache.org/blueprint/core
              http://cxf.apache.org/schemas/blueprint/core.xsd">
 
-    <!--Json provider Bean (loaded dynamicaly)-->
-    <bean id="JsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
-
     <!--Authentication Rest Resource Bean-->
     <bean id="AuthenticationResource" class="AuthenticationRest.AuthenticationResource">
         <argument ref="AuthenticationService"/>
+        <argument ref="AuthenticationSerializer"/>
     </bean>
 
     <!--Reference to Authentication Service already registered with OSGI Service registry-->
     <reference id="AuthenticationService" interface="AuthenticationApi.IAuthenticationService"/>
+
+    <!--Reference to Authentication Serializer Service already registered with OSGI Service registry-->
+    <reference id="AuthenticationSerializer" interface="AuthenticationApi.IAuthenticationSerializer"/>
 
     <!--Initialise rest cxf bus-->
     <cxf:bus>
@@ -29,7 +30,7 @@
     </cxf:bus>
 
     <!--Authentication Rest End Point-->
-    <jaxrs:server id="AuthenticationRestEndPoint" address="/x-platform/authentication">
+    <jaxrs:server id="AuthenticationRestEndPoint" address="/x-platform/authentication-rs">
         <!--Rest Resource Implementations for this end point-->
         <jaxrs:serviceBeans>
             <ref component-id="AuthenticationResource"/>
@@ -39,5 +40,8 @@
             <ref component-id="JsonProvider"/>
         </jaxrs:providers>
     </jaxrs:server>
+
+    <!--Json provider Bean (loaded dynamicaly)-->
+    <bean id="JsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
 
 </blueprint>

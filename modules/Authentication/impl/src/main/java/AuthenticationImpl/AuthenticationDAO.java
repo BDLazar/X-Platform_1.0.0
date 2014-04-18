@@ -2,41 +2,31 @@ package AuthenticationImpl;
 
 //import PersistenceApi.IPersistenceService;
 
-import AuthenticationApi.User;
+import AuthenticationApi.UserLoginData;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 public class AuthenticationDAO
 {
-    EntityManager postgresEM;
+    private EntityManager postgresSession;
 
-    public AuthenticationDAO(EntityManager postgresEM)
-    {
-        this.postgresEM = postgresEM;
+    public AuthenticationDAO(EntityManager postgresSession){
+        this.postgresSession = postgresSession;
     }
 
-    public void add(User user) {
-        postgresEM.persist( user );
-        postgresEM.flush();
+    public boolean save(UserLoginData user) {
+
+        //TODO Catch exceptions here and return accordingly
+
+        postgresSession.persist(user);
+        postgresSession.flush();
+
+        return true;
     }
 
-    public List<User> getAll()
-    {
-        return postgresEM.createQuery( "select d from User d", User.class ).getResultList();
+    public List<UserLoginData> getUserLoginByEmail(String email){
+        return  postgresSession.createQuery("SELECT ul from UserLoginData ul where ul.email = ?1").setParameter(1, email).getResultList();
     }
-
-    public void deleteAll()
-    {
-        postgresEM.createQuery( "delete from User" ).executeUpdate();
-        postgresEM.flush();
-    }
-
-    public EntityManager getEntityManager()
-    {
-        return postgresEM;
-    }
-
-
 
 }

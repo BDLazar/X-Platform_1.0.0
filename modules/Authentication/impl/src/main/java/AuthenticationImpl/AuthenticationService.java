@@ -1,38 +1,87 @@
 package AuthenticationImpl;
 
-import AuthenticationApi.IAuthenticationService;
+import AuthenticationApi.*;
+
+import java.util.List;
 
 
 public class AuthenticationService implements IAuthenticationService
 {
     private AuthenticationDAO authenticationDAO;
 
-
-    public AuthenticationService(AuthenticationDAO authenticationDAO)
-    {
+    public AuthenticationService(AuthenticationDAO authenticationDAO){
         this.authenticationDAO = authenticationDAO;
     }
 
     @Override
-    public boolean validateCredentials(String username, String password)
-    {
-        if(username == null || password == null)
+    public SignUpResponse processSignUpRequest(SignUpRequest signUpRequest) {
+
+        //build a response
+        SignUpResponse signUpResponse = new SignUpResponse();
+
+        //make sure the request is valid
+        if(signUpRequest.getEmail() == null || signUpRequest.getPassword() == null)
         {
-            return false;
+            signUpResponse.setSignUpResponseType(SignUpResponseType.INVALID_SIGNUP_REQUEST);
+            return signUpResponse;
         }
-        else if (username.equals("Onisim") && password.equals("Csadi"))
+
+        //check to see if email already exists in database
+        boolean emailExists=false;
+        if(authenticationDAO.getUserLoginByEmail(signUpRequest.getEmail()).size() > 0)
         {
-            return true;
+            emailExists =true;
+        }
+
+        signUpResponse.setEmail(signUpRequest.getEmail());
+
+        if(emailExists)
+        {
+            signUpResponse.setSignUpResponseType(SignUpResponseType.ALREADY_REGISTERED);
         }
         else
         {
-            return false;
+            //create new User Login Data and save it to the database
+            UserLoginData newUserLogin = new UserLoginData(signUpRequest.getEmail(),signUpRequest.getPassword());
+            boolean loginSaved = authenticationDAO.save(newUserLogin);
+            if(loginSaved)
+            {
+                signUpResponse.setSignUpResponseType(SignUpResponseType.SIGNUP_SUCCESS);
+            }
+            else
+            {
+                signUpResponse.setSignUpResponseType(SignUpResponseType.SIGNUP_FAILED);
+            }
         }
+
+        return signUpResponse;
     }
 
     @Override
-    public String getEmail()
-    {
-        return "";
+    public LoginResponse processLoginRequest(LoginRequest loginRequest) {
+
+        //Make sure the request is valid
+        LoginResponse loginResponse = new LoginResponse();
+        if(loginRequest.getPassword() == null || loginRequest.getLoginID() == null )
+        {
+            loginResponse.setLoginResponseType(LoginResponseType.INVALID_LOGIN_REQUEST);
+            return loginResponse;
+        }
+
+        //check to see if email and password exists in database and create an appropriate login response
+        List<UserLoginData> loginAccounts = authenticationDAO.getUserLoginByEmail(loginRequest.getLoginID());
+        loginResponse.setEmail(loginRequest.getLoginID());
+        loginResponse.setLoginResponseType(LoginResponseType.LOGIN_FAILED);
+
+        for(UserLoginData UserLogin : loginAccounts)
+        {
+            if(loginRequest.getLoginID().equals(UserLogin.getEmail()) && loginRequest.getPassword().equals(UserLogin.getPassword()))
+            {
+                loginResponse.setLoginResponseType(LoginResponseType.LOGIN_SUCCESS);
+                break;
+            }
+        }
+        return loginResponse;
     }
+
 }

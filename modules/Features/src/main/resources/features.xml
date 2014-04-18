@@ -3,6 +3,7 @@
 <features name="X-Platform-${project.version}" xmlns="http://karaf.apache.org/xmlns/features/v1.2.0">
 
     <!--<repository>mvn:groupId/artifactId/version/xml/features</repository>-->
+    <repository>mvn:org.apache.cxf.karaf/apache-cxf/3.0.0-milestone2/xml/features</repository>
 
     <feature name="X-Platform-Integration" version="1.0.0">
 
@@ -10,8 +11,10 @@
             <feature>X-Platform-Dependencies</feature>
         <!--____________________________X-Platform____________________________-->
             <feature>X-Platform</feature>
-        <!--____________________________Hibernate 4 OSGI______________________-->
-        <bundle>mvn:org.hibernate/hibernate-osgi/4.2.2.Final</bundle>
+        <!--____________________________JPA HIBERNATE API____________________-->
+            <bundle>wrap:mvn:org.hibernate.javax.persistence/hibernate-jpa-2.0-api/1.0.1.Final</bundle>
+        <!--____________________________Hibernate 4 OSGI IMPL________________-->
+            <bundle>mvn:org.hibernate/hibernate-osgi/4.2.2.Final</bundle>
 
     </feature>
     <feature name="X-Platform" version="1.0.0">
@@ -35,13 +38,10 @@
         <!--___________________________Logging_______________________________-->
         <bundle>mvn:org.slf4j/slf4j-simple/${slf4j.version}</bundle>
         <bundle>mvn:org.slf4j/slf4j-api/${slf4j.version}</bundle>
-
         <!--____________________________JTA__________________________________-->
         <feature>transaction</feature>
-        <!-- ___________________________JPA__________________________________-->
+        <!--____________________________JPA__________________________________-->
         <feature>jpa</feature>
-        <!--____________________________JPA HIBERNATE API____________________-->
-        <bundle>wrap:mvn:org.hibernate.javax.persistence/hibernate-jpa-2.0-api/1.0.1.Final</bundle>
         <!--____________________________HTTP_________________________________-->
         <feature>http</feature>
         <!-- ___________________________JNDI_________________________________-->

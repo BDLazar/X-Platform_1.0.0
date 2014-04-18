@@ -10,11 +10,15 @@
         </bean>
     </service>
 
-    <!--Authentication DAO-->
+    <!--Authentication Serializer Service-->
+    <service id="AuthenticationSerializer" interface="AuthenticationApi.IAuthenticationSerializer">
+        <bean class="AuthenticationImpl.AuthenticationSerializer"/>
+    </service>
+
+    <!--Authentication DAO Bean-->
     <bean id="AuthenticationDAO" class="AuthenticationImpl.AuthenticationDAO">
         <jpa:context unitname="postgresPU"/>            <!--Inject Postgres Database context into constructor as an entity Manager-->
         <tx:transaction method="*" value="Required"/>   <!--Inject transactional aspect into all methods with a required scope-->
     </bean>
-
 
 </blueprint>
