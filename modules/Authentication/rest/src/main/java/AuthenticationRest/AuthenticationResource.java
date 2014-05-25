@@ -1,6 +1,7 @@
 package AuthenticationRest;
 
 import AuthenticationApi.*;
+import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
@@ -13,7 +14,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.net.URI;
 
-
+@CrossOriginResourceSharing(allowAllOrigins = true) // allows client access to authentication resource from all domains
 @Path("/")
 public class AuthenticationResource {
 

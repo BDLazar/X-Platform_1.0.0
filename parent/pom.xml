@@ -161,7 +161,11 @@
                 <artifactId>cxf-rt-transports-http-jetty</artifactId>
                 <version>${cxf.version}</version>
             </dependency>
-
+            <dependency><!--Apache CXF Cross Domain Support for REST-->
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-rs-security-cors</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
 
 
         <!--HIBERNATE ORM & POSTGRES DATABASE-->

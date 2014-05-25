@@ -33,15 +33,17 @@
     <jaxrs:server id="AuthenticationRestEndPoint" address="/x-platform/authentication-rs">
         <!--Rest Resource Implementations for this end point-->
         <jaxrs:serviceBeans>
-            <ref component-id="AuthenticationResource"/>
+            <ref component-id = "AuthenticationResource"/>
         </jaxrs:serviceBeans>
         <!--Serialisation Provider for this end point-->
         <jaxrs:providers>
-            <ref component-id="JsonProvider"/>
+            <ref component-id ="JsonProvider"/>
+            <ref component-id ="CorsFilter" />
         </jaxrs:providers>
     </jaxrs:server>
 
     <!--Json provider Bean (loaded dynamicaly)-->
     <bean id="JsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
-
+    <!--CORS Resource Sharing Filter (loaded dynamicaly)-->
+    <bean id="CorsFilter" class="org.apache.cxf.rs.security.cors.CrossOriginResourceSharingFilter"/>
 </blueprint>

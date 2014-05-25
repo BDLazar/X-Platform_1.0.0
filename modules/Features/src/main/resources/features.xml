@@ -48,6 +48,7 @@
         <feature>jndi</feature>
         <!--____________________________CXF__________________________________-->
         <feature>cxf</feature>
+        <bundle>mvn:org.apache.cxf/cxf-rt-rs-security-cors/${cxf.version}</bundle>
         <!--____________________________Postgres DB Client Driver_________________-->
         <bundle>wrap:mvn:postgresql/postgresql/${postgres-driver.version}</bundle>
 
