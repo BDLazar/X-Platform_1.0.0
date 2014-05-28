@@ -14,43 +14,43 @@ public class AuthenticationService implements IAuthenticationService
     }
 
     @Override
-    public SignUpResponse processSignUpRequest(SignUpRequest signUpRequest) {
+    public RegisterResponse processRegisterRequest(RegisterRequest registerRequest) {
 
         //build a response
-        SignUpResponse signUpResponse = new SignUpResponse();
+        RegisterResponse signUpResponse = new RegisterResponse();
 
         //make sure the request is valid
-        if(signUpRequest.getEmail() == null || signUpRequest.getPassword() == null)
+        if(registerRequest.getEmail() == null || registerRequest.getPassword() == null)
         {
-            signUpResponse.setSignUpResponseType(SignUpResponseType.INVALID_SIGNUP_REQUEST);
+            signUpResponse.setSignUpResponseType(RegisterResponseType.INVALID_REGISTER_REQUEST);
             return signUpResponse;
         }
 
         //check to see if email already exists in database
         boolean emailExists=false;
-        if(authenticationDAO.getUserLoginByEmail(signUpRequest.getEmail()).size() > 0)
+        if(authenticationDAO.getUserLoginByEmail(registerRequest.getEmail()).size() > 0)
         {
             emailExists =true;
         }
 
-        signUpResponse.setEmail(signUpRequest.getEmail());
+        signUpResponse.setEmail(registerRequest.getEmail());
 
         if(emailExists)
         {
-            signUpResponse.setSignUpResponseType(SignUpResponseType.ALREADY_REGISTERED);
+            signUpResponse.setSignUpResponseType(RegisterResponseType.ALREADY_REGISTERED);
         }
         else
         {
             //create new User Login Data and save it to the database
-            UserLoginData newUserLogin = new UserLoginData(signUpRequest.getEmail(),signUpRequest.getPassword());
+            UserLoginData newUserLogin = new UserLoginData(registerRequest.getEmail(),registerRequest.getPassword());
             boolean loginSaved = authenticationDAO.save(newUserLogin);
             if(loginSaved)
             {
-                signUpResponse.setSignUpResponseType(SignUpResponseType.SIGNUP_SUCCESS);
+                signUpResponse.setSignUpResponseType(RegisterResponseType.REGISTER_SUCCESS);
             }
             else
             {
-                signUpResponse.setSignUpResponseType(SignUpResponseType.SIGNUP_FAILED);
+                signUpResponse.setSignUpResponseType(RegisterResponseType.REGISTER_FAILED);
             }
         }
 
@@ -60,8 +60,10 @@ public class AuthenticationService implements IAuthenticationService
     @Override
     public LoginResponse processLoginRequest(LoginRequest loginRequest) {
 
-        //Make sure the request is valid
+
         LoginResponse loginResponse = new LoginResponse();
+
+        //Make sure the request is valid
         if(loginRequest.getPassword() == null || loginRequest.getLoginID() == null )
         {
             loginResponse.setLoginResponseType(LoginResponseType.INVALID_LOGIN_REQUEST);
@@ -78,10 +80,27 @@ public class AuthenticationService implements IAuthenticationService
             if(loginRequest.getLoginID().equals(UserLogin.getEmail()) && loginRequest.getPassword().equals(UserLogin.getPassword()))
             {
                 loginResponse.setLoginResponseType(LoginResponseType.LOGIN_SUCCESS);
+                String token = generateToken(loginRequest.getLoginID(),loginRequest.getPassword());
+                loginResponse.setToken(token);
                 break;
             }
         }
         return loginResponse;
+    }
+
+
+    private String generateToken(String loginID, String password) {
+        return "abc123";
+    }
+
+    private boolean validateToken(String token, String userID) {
+
+        if(token!=null && token.equals("abc123"))
+        {
+            return true;
+        }
+
+        return false;
     }
 
 }

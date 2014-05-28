@@ -3,24 +3,24 @@ package AuthenticationApi;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 
-public class SignUpResponse
+public class RegisterResponse
 {
-    SignUpResponseType signUpResponseType;
+    RegisterResponseType signUpResponseType;
     String email;
 
-    public SignUpResponse() {
+    public RegisterResponse() {
     }
 
-    public SignUpResponse(SignUpResponseType signUpResponseType, String email) {
+    public RegisterResponse(RegisterResponseType signUpResponseType, String email) {
         this.signUpResponseType = signUpResponseType;
         this.email = email;
     }
 
-    public SignUpResponseType getSignUpResponseType() {
+    public RegisterResponseType getSignUpResponseType() {
         return signUpResponseType;
     }
 
-    public void setSignUpResponseType(SignUpResponseType signUpResponseType) {
+    public void setSignUpResponseType(RegisterResponseType signUpResponseType) {
         this.signUpResponseType = signUpResponseType;
     }
 

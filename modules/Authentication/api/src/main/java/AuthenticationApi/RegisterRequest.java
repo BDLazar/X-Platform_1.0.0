@@ -1,15 +1,15 @@
 package AuthenticationApi;
 
 
-public class SignUpRequest {
+public class RegisterRequest {
 
     private String email;
     private String password;
 
-    public SignUpRequest() {
+    public RegisterRequest() {
     }
 
-    public SignUpRequest(String email, String password) {
+    public RegisterRequest(String email, String password) {
         this.email = email;
         this.password = password;
     }

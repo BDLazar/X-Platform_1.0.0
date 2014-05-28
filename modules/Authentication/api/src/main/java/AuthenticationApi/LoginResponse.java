@@ -7,13 +7,15 @@ public class LoginResponse
 {
     private LoginResponseType loginResponseType;
     private String email;
+    private String token;
 
     public LoginResponse() {
     }
 
-    public LoginResponse(String email, LoginResponseType loginResponseType) {
-        this.email = email;
+    public LoginResponse(String email, LoginResponseType loginResponseType, String token) {
         this.loginResponseType = loginResponseType;
+        this.email = email;
+        this.token = token;
     }
 
     public LoginResponseType getLoginResponseType() {
@@ -32,12 +34,21 @@ public class LoginResponse
         this.email = email;
     }
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public ObjectNode toJson()
     {
         ObjectMapper jsonMapper = new ObjectMapper();
         ObjectNode jsonObj = jsonMapper.createObjectNode();
         jsonObj.put("loginResponseType", loginResponseType.name());
         jsonObj.put("email", email);
+        jsonObj.put("token", token);
 
         return jsonObj;
     }

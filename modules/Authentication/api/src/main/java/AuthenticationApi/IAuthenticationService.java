@@ -2,6 +2,6 @@ package AuthenticationApi;
 
 public interface IAuthenticationService
 {
-    public SignUpResponse processSignUpRequest(SignUpRequest signUpRequest);
+    public RegisterResponse processRegisterRequest(RegisterRequest signUpRequest);
     public LoginResponse processLoginRequest(LoginRequest loginRequest);
 }
