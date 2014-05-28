@@ -5,23 +5,23 @@ import org.codehaus.jackson.node.ObjectNode;
 
 public class RegisterResponse
 {
-    RegisterResponseType signUpResponseType;
+    RegisterResponseType registerResponseType;
     String email;
 
     public RegisterResponse() {
     }
 
-    public RegisterResponse(RegisterResponseType signUpResponseType, String email) {
-        this.signUpResponseType = signUpResponseType;
+    public RegisterResponse(RegisterResponseType registerResponseType, String email) {
+        this.registerResponseType = registerResponseType;
         this.email = email;
     }
 
-    public RegisterResponseType getSignUpResponseType() {
-        return signUpResponseType;
+    public RegisterResponseType getRegisterResponseType() {
+        return registerResponseType;
     }
 
-    public void setSignUpResponseType(RegisterResponseType signUpResponseType) {
-        this.signUpResponseType = signUpResponseType;
+    public void setRegisterResponseType(RegisterResponseType registerResponseType) {
+        this.registerResponseType = registerResponseType;
     }
 
     public String getEmail() {
@@ -35,7 +35,7 @@ public class RegisterResponse
     public ObjectNode toJson(){
         ObjectMapper jsonMapper = new ObjectMapper();
         ObjectNode jsonObj = jsonMapper.createObjectNode();
-        jsonObj.put("signUpResponseType", signUpResponseType.name());
+        jsonObj.put("registerResponseType", registerResponseType.name());
         jsonObj.put("email",email);
 
         return jsonObj;

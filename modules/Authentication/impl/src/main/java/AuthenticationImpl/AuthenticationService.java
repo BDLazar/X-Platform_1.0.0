@@ -22,7 +22,7 @@ public class AuthenticationService implements IAuthenticationService
         //make sure the request is valid
         if(registerRequest.getEmail() == null || registerRequest.getPassword() == null)
         {
-            signUpResponse.setSignUpResponseType(RegisterResponseType.INVALID_REGISTER_REQUEST);
+            signUpResponse.setRegisterResponseType(RegisterResponseType.INVALID_REGISTER_REQUEST);
             return signUpResponse;
         }
 
@@ -37,7 +37,7 @@ public class AuthenticationService implements IAuthenticationService
 
         if(emailExists)
         {
-            signUpResponse.setSignUpResponseType(RegisterResponseType.ALREADY_REGISTERED);
+            signUpResponse.setRegisterResponseType(RegisterResponseType.ALREADY_REGISTERED);
         }
         else
         {
@@ -46,11 +46,11 @@ public class AuthenticationService implements IAuthenticationService
             boolean loginSaved = authenticationDAO.save(newUserLogin);
             if(loginSaved)
             {
-                signUpResponse.setSignUpResponseType(RegisterResponseType.REGISTER_SUCCESS);
+                signUpResponse.setRegisterResponseType(RegisterResponseType.REGISTER_SUCCESS);
             }
             else
             {
-                signUpResponse.setSignUpResponseType(RegisterResponseType.REGISTER_FAILED);
+                signUpResponse.setRegisterResponseType(RegisterResponseType.REGISTER_FAILED);
             }
         }
 
