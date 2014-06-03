@@ -13,4 +13,9 @@
         </service-properties>
     </service>
 
+    <!--Mongo DB Datasource Service-->
+    <service id="MongoDBService" interface="PersistenceApi.IPersistenceService">
+        <bean class="PersistenceImpl.MongoDBService"/>
+    </service>
+
 </blueprint>

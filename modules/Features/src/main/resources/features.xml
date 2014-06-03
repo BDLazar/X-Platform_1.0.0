@@ -49,18 +49,20 @@
         <!--____________________________CXF__________________________________-->
         <feature>cxf</feature>
         <bundle>mvn:org.apache.cxf/cxf-rt-rs-security-cors/${cxf.version}</bundle>
-        <!--____________________________Postgres DB Client Driver_________________-->
+        <!--____________________________Postgres DB Client Driver____________-->
         <bundle>wrap:mvn:postgresql/postgresql/${postgres-driver.version}</bundle>
+        <!--____________________________Mongo DB Client Driver_______________-->
+        <bundle>wrap:mvn:org.mongodb/mongo-java-driver/${mongodb-driver.version}</bundle>
 
-        <!--_____________________________JSON____________________________________-->
+        <!--_____________________________JSON________________________________-->
         <bundle>mvn:org.codehaus.jackson/jackson-jaxrs/${jackson.version}</bundle>
         <bundle>mvn:org.codehaus.jackson/jackson-core-asl/${jackson.version}</bundle>
         <bundle>mvn:org.codehaus.jackson/jackson-mapper-asl/${jackson.version}</bundle>
 
-        <!--_____________________________REST____________________________________-->
+        <!--_____________________________REST________________________________-->
         <bundle>mvn:javax.ws.rs/javax.ws.rs-api/${jax-rs.version}</bundle>
 
-        <!--____________________________Hibernate ORM 4_______________________-->
+        <!--____________________________Hibernate ORM 4______________________-->
         <feature>Hibernate-ORM-4</feature>
     </feature>
     <feature name="Hibernate-ORM-4" version="4.2.2">
