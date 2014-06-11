@@ -2,14 +2,11 @@ package AuthenticationRest;
 
 import AuthenticationApi.*;
 import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.node.ObjectNode;
 import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
-
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.net.URI;
+
 
 @CrossOriginResourceSharing(allowAllOrigins = true) // allows client access to authentication resource from all domains
 @Path("/")
@@ -84,37 +81,18 @@ public class AuthenticationResource {
 
     //endregion
 
-    //region Bad Response
-    private Response createBadRequestResponse(Exception ex){
-        return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).type(TEXT_PLAIN).build();
-    }
-    //endregion
-
-    //region Samples
+    //region Validate
     @GET
-    @Path("getSample")
-    @Produces({ MediaType.APPLICATION_JSON })
-    public Response getSample(@Context UriInfo uriInfo, @Context HttpHeaders headers)
+    @Path("validate-user-session")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response validateUserSession(@Context UriInfo uriInfo, @HeaderParam("loginID") String userID, @HeaderParam("token") String token)
     {
-        try {
-            //url
-            LOGGER.info(RECEIVED_REST_REQUEST, "getSample", uriInfo.getPath());
-            //headers
-            for(String header : headers.getRequestHeaders().keySet()){
-                System.out.println(header);
-            }
-
-            URI uri = uriInfo.getAbsolutePathBuilder().path(String.valueOf("sub_path")).build();
-            String message = "I got your get request, this is the response";
-
-            ObjectMapper mapper = new ObjectMapper();
-            ObjectNode jsonNode = mapper.createObjectNode();
-
-            jsonNode.put("Uri", uri.toASCIIString());
-            jsonNode.put("Message", message);
-
-
-            return Response.ok().entity(jsonNode).build();
+        try
+        {
+            LOGGER.info(RECEIVED_REST_REQUEST, "Authentication::ValidateUserSession", uriInfo.getPath());
+            ValidateSessionRequest validateRequest = new ValidateSessionRequest(userID,token);
+            ValidateSessionResponse validateResponse = authenticationService.processValidateSessionRequest(validateRequest);
+            return Response.ok().entity(validateResponse.toJson()).build();
         }
         catch (Exception ex)
         {
@@ -127,4 +105,11 @@ public class AuthenticationResource {
         }
     }
     //endregion
+
+    //region Bad Response
+    private Response createBadRequestResponse(Exception ex){
+        return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).type(TEXT_PLAIN).build();
+    }
+    //endregion
+
 }

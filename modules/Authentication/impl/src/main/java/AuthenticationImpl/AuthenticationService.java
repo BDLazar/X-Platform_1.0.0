@@ -7,12 +7,17 @@ import java.util.List;
 
 public class AuthenticationService implements IAuthenticationService
 {
+    //region Properties
     private AuthenticationDAO authenticationDAO;
+    //endregion
 
+    //region Constructors
     public AuthenticationService(AuthenticationDAO authenticationDAO){
         this.authenticationDAO = authenticationDAO;
     }
+    //endregion
 
+    //region Public Methods
     @Override
     public RegisterResponse processRegisterRequest(RegisterRequest registerRequest) {
 
@@ -56,7 +61,6 @@ public class AuthenticationService implements IAuthenticationService
 
         return signUpResponse;
     }
-
     @Override
     public LoginResponse processLoginRequest(LoginRequest loginRequest) {
 
@@ -87,12 +91,27 @@ public class AuthenticationService implements IAuthenticationService
         }
         return loginResponse;
     }
+    @Override
+    public ValidateSessionResponse processValidateSessionRequest(ValidateSessionRequest validateRequest){
+           if(validateRequest.getToken() == null || validateRequest.getLoginID() == null)
+           {
+               return new ValidateSessionResponse(ValidateSessionResponseType.INVALID_USER_SESSION_REQUEST);
+           }
+           else if(validateToken(validateRequest.getToken(), validateRequest.getLoginID()))
+           {
+               return new ValidateSessionResponse(ValidateSessionResponseType.USER_SESSION_VALID);
+           }
+           else
+           {
+               return new ValidateSessionResponse(ValidateSessionResponseType.USER_SESSION_INVALID);
+           }
+    }
+    //endregion
 
-
+    //region Private Methods
     private String generateToken(String loginID, String password) {
         return "abc123";
     }
-
     private boolean validateToken(String token, String userID) {
 
         if(token!=null && token.equals("abc123"))
@@ -102,5 +121,5 @@ public class AuthenticationService implements IAuthenticationService
 
         return false;
     }
-
+    //endregion
 }

@@ -47,7 +47,7 @@ public class LoginResponse
         ObjectMapper jsonMapper = new ObjectMapper();
         ObjectNode jsonObj = jsonMapper.createObjectNode();
         jsonObj.put("loginResponseType", loginResponseType.name());
-        jsonObj.put("email", email);
+        jsonObj.put("loginID", email);
         jsonObj.put("token", token);
 
         return jsonObj;
