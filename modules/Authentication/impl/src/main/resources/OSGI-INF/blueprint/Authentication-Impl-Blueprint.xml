@@ -4,19 +4,19 @@
            xmlns:tx="http://aries.apache.org/xmlns/transactions/v1.0.0">
 
     <!--Authentication Service-->
-    <service id="AuthenticationService" interface="AuthenticationApi.IAuthenticationService">
-        <bean class="AuthenticationImpl.AuthenticationService">
+    <service id="AuthenticationService" interface="authentication.api.IAuthenticationService">
+        <bean class="authentication.impl.AuthenticationService">
             <argument ref="AuthenticationDAO"/>
         </bean>
     </service>
 
     <!--Authentication Serializer Service-->
-    <service id="AuthenticationSerializer" interface="AuthenticationApi.IAuthenticationSerializer">
-        <bean class="AuthenticationImpl.AuthenticationSerializer"/>
+    <service id="AuthenticationSerializer" interface="authentication.api.IAuthenticationSerializer">
+        <bean class="authentication.impl.AuthenticationSerializer"/>
     </service>
 
     <!--Authentication DAO Bean-->
-    <bean id="AuthenticationDAO" class="AuthenticationImpl.AuthenticationDAO">
+    <bean id="AuthenticationDAO" class="authentication.impl.AuthenticationDAO">
         <jpa:context unitname="postgresPU"/>            <!--Inject Postgres Database context into constructor as an entity Manager-->
         <tx:transaction method="*" value="Required"/>   <!--Inject transactional aspect into all methods with a required scope-->
     </bean>

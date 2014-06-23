@@ -11,16 +11,16 @@
              http://cxf.apache.org/schemas/blueprint/core.xsd">
 
     <!--Authentication Rest Resource Bean-->
-    <bean id="AuthenticationResource" class="AuthenticationRest.AuthenticationResource">
+    <bean id="AuthenticationResource" class="authentication.rest.AuthenticationResource">
         <argument ref="AuthenticationService"/>
         <argument ref="AuthenticationSerializer"/>
     </bean>
 
     <!--Reference to Authentication Service already registered with OSGI Service registry-->
-    <reference id="AuthenticationService" interface="AuthenticationApi.IAuthenticationService"/>
+    <reference id="AuthenticationService" interface="authentication.api.IAuthenticationService"/>
 
     <!--Reference to Authentication Serializer Service already registered with OSGI Service registry-->
-    <reference id="AuthenticationSerializer" interface="AuthenticationApi.IAuthenticationSerializer"/>
+    <reference id="AuthenticationSerializer" interface="authentication.api.IAuthenticationSerializer"/>
 
     <!--Initialise rest cxf bus-->
     <cxf:bus>

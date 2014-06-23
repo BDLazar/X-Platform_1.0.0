@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------
 # Use this file to add customized Bnd instructions for the bundle
 #-----------------------------------------------------------------
-Export-Package: PersistenceApi
+Export-Package: persistence.api
 Import-Package: *
