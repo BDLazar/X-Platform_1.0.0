@@ -6,23 +6,21 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <relativePath>../parent/pom.xml</relativePath>
         <groupId>X-Platform</groupId>
-        <artifactId>Parent</artifactId>
+        <artifactId>Modules</artifactId>
         <version>1.0.0</version>
     </parent>
 
     <groupId>X-Platform</groupId>
-    <artifactId>Modules</artifactId>
+    <artifactId>Modules.Profile</artifactId>
     <version>1.0.0</version>
-    <name>X-Platform :: Modules</name>
+    <name>X-Platform :: Modules :: Profile</name>
     <packaging>pom</packaging>
 
     <modules>
-		<module>Authentication</module>
-		<module>Persistence</module>
-        <module>Profile</module>
-        <module>Features</module>
+        <module>api</module>
+        <module>impl</module>
+        <module>rest</module>
     </modules>
 
 </project>

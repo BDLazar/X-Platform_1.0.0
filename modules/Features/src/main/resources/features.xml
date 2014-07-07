@@ -26,6 +26,9 @@
         <bundle>mvn:X-Platform/Modules.Authentication.Api/${project.version}</bundle>
         <bundle>mvn:X-Platform/Modules.Authentication.Impl/${project.version}</bundle>
         <bundle>mvn:X-Platform/Modules.Authentication.Rest/${project.version}</bundle>
+        <bundle>mvn:X-Platform/Modules.Profile.Api/${project.version}</bundle>
+        <bundle>mvn:X-Platform/Modules.Profile.Impl/${project.version}</bundle>
+        <bundle>mvn:X-Platform/Modules.Profile.Rest/${project.version}</bundle>
     </feature>
     <feature name="X-Platform-Dependencies" version="1.0.0">
 

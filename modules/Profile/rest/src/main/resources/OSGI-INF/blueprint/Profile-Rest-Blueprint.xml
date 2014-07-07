@@ -1,0 +1,46 @@
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:jaxrs="http://cxf.apache.org/blueprint/jaxrs"
+           xmlns:cxf="http://cxf.apache.org/blueprint/core"
+           xsi:schemaLocation="
+             http://www.osgi.org/xmlns/blueprint/v1.0.0
+             http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd
+             http://cxf.apache.org/blueprint/jaxrs
+             http://cxf.apache.org/schemas/blueprint/jaxrs.xsd
+             http://cxf.apache.org/blueprint/core
+             http://cxf.apache.org/schemas/blueprint/core.xsd">
+
+    <!--Profile Rest Resource Bean-->
+    <bean id="UserProfileResource" class="profile.rest.UserProfileResource">
+        <argument ref="UserProfileService"/>
+    </bean>
+
+    <!--Reference to Profile Service already registered with OSGI Service registry-->
+    <reference id="UserProfileService" interface="profile.api.IUserProfileService"/>
+
+
+    <!--Initialise rest cxf bus-->
+    <cxf:bus>
+        <cxf:features>
+            <cxf:logging/>
+        </cxf:features>
+    </cxf:bus>
+
+    <!--Profile Rest End Point-->
+    <jaxrs:server id="ProfileRestEndPoint" address="/x-platform/profile-rs">
+        <!--Rest Resource Implementations for this end point-->
+        <jaxrs:serviceBeans>
+            <ref component-id = "UserProfileResource"/>
+        </jaxrs:serviceBeans>
+        <!--Serialisation Provider for this end point-->
+        <jaxrs:providers>
+            <ref component-id ="JsonProvider"/>
+            <ref component-id ="CorsFilter" />
+        </jaxrs:providers>
+    </jaxrs:server>
+
+    <!--Json provider Bean (loaded dynamicaly)-->
+    <bean id="JsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+    <!--CORS Resource Sharing Filter (loaded dynamicaly)-->
+    <bean id="CorsFilter" class="org.apache.cxf.rs.security.cors.CrossOriginResourceSharingFilter"/>
+</blueprint>
