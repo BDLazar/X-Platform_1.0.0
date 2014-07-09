@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+           xmlns:jpa="http://aries.apache.org/xmlns/jpa/v1.1.0"
+           xmlns:tx="http://aries.apache.org/xmlns/transactions/v1.0.0">
+
+    <!--User Service-->
+    <service id="UserService" interface="user.api.IUserService">
+        <bean class="user.impl.UserService">
+            <argument ref="UserDAO"/>
+        </bean>
+    </service>
+
+    <!--User DAO Bean-->
+    <bean id="UserDAO" class="user.impl.UserDAO">
+        <argument ref="PersistenceService"/>
+    </bean>
+
+    <!--Reference to Persistence Service already registered with OSGI Service registry-->
+    <reference id="PersistenceService" interface="persistence.api.IPersistenceService"/>
+
+</blueprint>
