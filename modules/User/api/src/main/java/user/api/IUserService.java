@@ -1,8 +1,5 @@
 package user.api;
 
-/**
- * Created by Bianca on 7/9/2014.
- */
 public interface IUserService {
     public UserDetails getUser(String userId);
     public String createUser(UserDetails userDetails);

@@ -1,9 +1,5 @@
 package user.rest;
 
-/**
- * Created by Bianca on 7/9/2014.
- */
-
 import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.slf4j.Logger;
 import user.api.IUserService;
@@ -12,7 +8,6 @@ import user.api.UserDetails;
 import static org.slf4j.LoggerFactory.getLogger;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.awt.*;
 
 @CrossOriginResourceSharing(allowAllOrigins = true) // allows client access to authentication resource from all domains
 @Path("/user/")

@@ -3,9 +3,6 @@ package user.impl;
 import user.api.IUserService;
 import user.api.UserDetails;
 
-/**
- * Created by Bianca on 7/9/2014.
- */
 public class UserService implements IUserService {
 
     private  UserDAO userDAO;

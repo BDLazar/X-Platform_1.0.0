@@ -8,9 +8,6 @@ import user.api.UserDetails;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-/**
- * Created by Bianca on 7/9/2014.
- */
 public class UserDAO {
 
     private static final Logger LOGGER = getLogger(UserDAO.class);

@@ -4,10 +4,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 import user.api.UserDetails;
 
-
-/**
- * Created by Bianca on 07/07/14.
- */
 public class GetUserResponse {
 
     private ResponseStatus responseStatus;

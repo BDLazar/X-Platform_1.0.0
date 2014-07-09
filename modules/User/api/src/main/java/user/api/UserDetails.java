@@ -6,9 +6,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.node.ObjectNode;
 
 import java.util.Date;
-/**
- * Created by Bianca on 7/9/2014.
- */
+
 public class UserDetails {
 
     private String id;
@@ -58,7 +56,6 @@ public class UserDetails {
         }
 
     }
-
 
     public String getId() {
         return id;
