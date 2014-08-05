@@ -7,22 +7,19 @@
 
     <parent>
         <groupId>X-Platform</groupId>
-        <artifactId>Modules.User</artifactId>
+        <artifactId>Modules</artifactId>
         <version>1.0.0</version>
     </parent>
 
     <groupId>X-Platform</groupId>
-    <artifactId>Modules.User.Api</artifactId>
+    <artifactId>Modules.Common</artifactId>
     <version>1.0.0</version>
-    <name>X-Platform :: Modules :: User :: Api</name>
-    <packaging>bundle</packaging>
+    <name>X-Platform :: Modules :: Common</name>
+    <packaging>pom</packaging>
 
-    <dependencies>
-        <dependency>
-            <groupId>X-Platform</groupId>
-            <artifactId>Modules.Common.Api</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-    </dependencies>
+    <modules>
+        <module>api</module>
+        <module>impl</module>
+    </modules>
 
 </project>

@@ -3,3 +3,4 @@
 #-----------------------------------------------------------------
 Export-Package: user.api
 Import-Package: *
+DynamicImport-Package: org.hibernate.proxy,javassist.util.proxy

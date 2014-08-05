@@ -19,6 +19,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>Common</module>
 		<module>Authentication</module>
 		<module>Persistence</module>
         <module>User</module>

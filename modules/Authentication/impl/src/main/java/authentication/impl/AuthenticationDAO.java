@@ -1,7 +1,5 @@
 package authentication.impl;
 
-//import PersistenceApi.IPersistenceService;
-
 import authentication.api.UserLoginData;
 
 import javax.persistence.EntityManager;
@@ -15,11 +13,11 @@ public class AuthenticationDAO
         this.postgresSession = postgresSession;
     }
 
-    public boolean save(UserLoginData user) {
+    public boolean save(UserLoginData userLoginData) {
 
         //TODO Catch exceptions here and return accordingly
 
-        postgresSession.persist(user);
+        postgresSession.persist(userLoginData);
         postgresSession.flush();
 
         return true;

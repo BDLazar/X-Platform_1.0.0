@@ -21,14 +21,21 @@
         <!--<feature version="${version}">feature-name</feature>-->
         <!--<configfile finalname="configFileName.cfg">mvn:groupId/artifactId/version/cfg</configfile>-->
         <!--<bundle>mvn:groupId/artifactId/version</bundle>-->
+        <bundle>mvn:X-Platform/Modules.Common.Api/${project.version}</bundle>
+        <bundle>mvn:X-Platform/Modules.Common.Impl/${project.version}</bundle>
+        
+
         <bundle>mvn:X-Platform/Modules.Persistence.Api/${project.version}</bundle>
         <bundle>mvn:X-Platform/Modules.Persistence.Impl/${project.version}</bundle>
+
         <bundle>mvn:X-Platform/Modules.Authentication.Api/${project.version}</bundle>
         <bundle>mvn:X-Platform/Modules.Authentication.Impl/${project.version}</bundle>
         <bundle>mvn:X-Platform/Modules.Authentication.Rest/${project.version}</bundle>
+
         <bundle>mvn:X-Platform/Modules.User.Api/${project.version}</bundle>
         <bundle>mvn:X-Platform/Modules.User.Impl/${project.version}</bundle>
         <bundle>mvn:X-Platform/Modules.User.Rest/${project.version}</bundle>
+
         <bundle>mvn:X-Platform/Modules.Profile.Api/${project.version}</bundle>
         <bundle>mvn:X-Platform/Modules.Profile.Impl/${project.version}</bundle>
         <bundle>mvn:X-Platform/Modules.Profile.Rest/${project.version}</bundle>

@@ -17,7 +17,7 @@
 
     <!--Authentication DAO Bean-->
     <bean id="AuthenticationDAO" class="authentication.impl.AuthenticationDAO">
-        <jpa:context unitname="postgresPU"/>            <!--Inject Postgres Database context into constructor as an entity Manager-->
+        <jpa:context unitname="AuthenticationPU"/>            <!--Inject Postgres Database context into constructor as an entity Manager-->
         <tx:transaction method="*" value="Required"/>   <!--Inject transactional aspect into all methods with a required scope-->
     </bean>
 
