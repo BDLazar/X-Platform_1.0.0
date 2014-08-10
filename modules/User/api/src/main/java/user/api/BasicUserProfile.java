@@ -4,7 +4,6 @@ import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.node.ObjectNode;
-
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -111,6 +110,34 @@ public class BasicUserProfile extends UserProfile {
         }
 
         return mainNode;
+    }
+    //endregion
+
+    //region Business Methods
+    @Override
+    public int updateFrom(UserProfile userProfileUpdates)
+    {
+        int updatesAmount = 0;
+
+        //try cast to Basic User Profile and apply the updates
+        if(userProfileUpdates.getUserProfileType() == UserProfileType.BASIC)
+        {
+            //update UserProfile superclass
+            updatesAmount = updatesAmount + super.updateFrom(userProfileUpdates);
+
+            BasicUserProfile basicUserProfileUpdates = (BasicUserProfile) userProfileUpdates;
+
+            String newFirstName = basicUserProfileUpdates.getFirstName();
+            String newMiddleName = basicUserProfileUpdates.getMiddleName();
+            String newLastName = basicUserProfileUpdates.getLastName();
+
+            if(newFirstName != null){this.firstName = newFirstName; updatesAmount++;}
+            if(newMiddleName != null){this.middleName = newMiddleName; updatesAmount++;}
+            if(newLastName != null){this.lastName = newLastName; updatesAmount++;}
+
+        }
+
+        return updatesAmount;
     }
     //endregion
 }

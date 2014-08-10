@@ -3,15 +3,15 @@
            xmlns:jpa="http://aries.apache.org/xmlns/jpa/v1.1.0"
            xmlns:tx="http://aries.apache.org/xmlns/transactions/v1.0.0">
 
-    <!--User Account Service-->
-    <service id="UserAccountService" interface="user.api.IUserAccountService">
-        <bean class="user.impl.UserAccountService">
-            <argument ref="UserAccountDAO"/>
+    <!--User Service-->
+    <service id="UserAccountService" interface="user.api.IUserService">
+        <bean class="user.impl.UserService">
+            <argument ref="UserDAO"/>
         </bean>
     </service>
 
-    <!--User Account DAO Bean-->
-    <bean id="UserAccountDAO" class="user.impl.UserAccountDAO">
+    <!--User DAO Bean-->
+    <bean id="UserDAO" class="user.impl.UserDAO">
         <jpa:context unitname="UserPU"/><!--Inject Postgres Database context into constructor as an entity Manager-->
         <tx:transaction method="*" value="Required"/><!--Inject transactional aspect into all methods with a required scope-->
     </bean>

@@ -1,13 +1,10 @@
 package user.api;
 
-/**
- * Created by Onis on 02/08/14.
- */
-
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.node.ObjectNode;
+import sun.net.www.content.audio.basic;
 
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
@@ -115,6 +112,34 @@ public class BasicUserAccount extends UserAccount {
         }
 
         return mainNode;
+    }
+    //endregion
+
+    //region Business Methods
+    @Override
+    public int updateFrom(UserAccount userAccountUpdates)
+    {
+        int updatesAmount = 0;
+
+        //try cast to Basic User Profile and apply the updates
+        if(userAccountUpdates.getUserAccountType() == UserAccountType.BASIC)
+        {
+            //Update superclass UserAccount class
+            updatesAmount = updatesAmount + super.updateFrom(userAccountUpdates);
+
+            BasicUserAccount basicUserAccountUpdates = (BasicUserAccount) userAccountUpdates;
+
+            String newUserName = basicUserAccountUpdates.getUserName();
+            String newEmail = basicUserAccountUpdates.getEmail();
+            String newPassword = basicUserAccountUpdates.getPassword();
+
+            if (newUserName != null) {this.userName = newUserName; updatesAmount++;}
+            if (newUserName != null) {this.email = newEmail; updatesAmount++;}
+            if (newUserName != null) {this.password = newPassword; updatesAmount++;}
+
+        }
+
+        return updatesAmount;
     }
     //endregion
 }

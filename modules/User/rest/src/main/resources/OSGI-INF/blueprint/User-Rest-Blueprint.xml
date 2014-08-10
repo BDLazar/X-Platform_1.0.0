@@ -11,12 +11,12 @@
              http://cxf.apache.org/schemas/blueprint/core.xsd">
 
     <!--User Account Rest Resource Bean-->
-    <bean id="UserAccountResource" class="user.rest.UserAccountResource">
-        <argument ref="UserAccountService"/>
+    <bean id="UserResource" class="user.rest.UserResource">
+        <argument ref="UserService"/>
     </bean>
 
-    <!--Reference to User Account Service already registered with OSGI Service registry-->
-    <reference id="UserAccountService" interface="user.api.IUserAccountService"/>
+    <!--Reference to User Service already registered with OSGI Service registry-->
+    <reference id="UserService" interface="user.api.IUserService"/>
 
     <!--Initialise rest cxf bus-->
     <cxf:bus>
@@ -29,7 +29,7 @@
     <jaxrs:server id="UserRestEndPoint" address="/x-platform/user-rs">
         <!--Rest Resource Implementations for this end point-->
         <jaxrs:serviceBeans>
-            <ref component-id = "UserAccountResource"/>
+            <ref component-id = "UserResource"/>
         </jaxrs:serviceBeans>
         <!--Serialisation Provider for this end point-->
         <jaxrs:providers>
