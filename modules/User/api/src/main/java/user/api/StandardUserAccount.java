@@ -1,22 +1,24 @@
 package user.api;
 
 import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
-import org.codehaus.jackson.node.ObjectNode;
-
-import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
-import java.util.Iterator;
+        import org.codehaus.jackson.map.ObjectMapper;
+        import org.codehaus.jackson.map.ObjectWriter;
+        import org.codehaus.jackson.node.ObjectNode;
+        import javax.persistence.Entity;
+        import javax.persistence.PrimaryKeyJoinColumn;
+        import javax.persistence.Table;
+        import java.util.Iterator;
 
 @Entity
 @Table(name="STANDARD_USER_ACCOUNT")
 @PrimaryKeyJoinColumn(name="id")
 public class StandardUserAccount extends UserAccount{
 
+    //region Properties
     String testProperty;
+    //endregion
 
+    //region Constructors
     public StandardUserAccount() {
         super(UserAccountType.STANDARD);
     }
@@ -25,7 +27,9 @@ public class StandardUserAccount extends UserAccount{
         super(UserAccountType.STANDARD);
         this.testProperty = testProperty;
     }
+    //endregion
 
+    //region Getters & Setters
     public String getTestProperty() {
         return testProperty;
     }
@@ -33,6 +37,7 @@ public class StandardUserAccount extends UserAccount{
     public void setTestProperty(String testProperty) {
         this.testProperty = testProperty;
     }
+    //endregion
 
     //region Parsers
     @Override
@@ -85,6 +90,30 @@ public class StandardUserAccount extends UserAccount{
         }
 
         return mainNode;
+    }
+    //endregion
+
+    //region Business Methods
+    @Override
+    public int updateFrom(UserAccount userAccountUpdates)
+    {
+        int updatesAmount = 0;
+
+        //try cast to Standard User Profile and apply the updates
+        if(userAccountUpdates.getUserAccountType() == UserAccountType.STANDARD)
+        {
+            //Update superclass UserAccount class
+            super.updateFrom(userAccountUpdates);
+
+            StandardUserAccount standardUserAccount = (StandardUserAccount) userAccountUpdates;
+
+            String newTestProperty = standardUserAccount.getTestProperty();
+
+            if (newTestProperty != null) {this.testProperty = newTestProperty; updatesAmount++;}
+
+        }
+
+        return updatesAmount;
     }
     //endregion
 }

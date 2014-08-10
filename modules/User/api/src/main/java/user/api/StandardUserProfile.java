@@ -16,9 +16,27 @@ import java.util.Iterator;
 @PrimaryKeyJoinColumn(name="id")
 public class StandardUserProfile extends UserProfile{
 
+    //region Properties
+    String testProperty;
+    //endregion
+
+    //region Constructors
     public StandardUserProfile() {
         super(UserProfileType.STANDARD);
     }
+    //endregion
+
+    //region Getters & Setters
+
+    public String getTestProperty() {
+        return testProperty;
+    }
+
+    public void setTestProperty(String testProperty) {
+        this.testProperty = testProperty;
+    }
+
+    //endregion
 
     //region Parsers
     @Override
@@ -71,6 +89,30 @@ public class StandardUserProfile extends UserProfile{
         }
 
         return mainNode;
+    }
+    //endregion
+
+    //region Business Methods
+    @Override
+    public int updateFrom(UserProfile userProfileUpdates)
+    {
+        int updatesAmount = 0;
+
+        //try cast to Standard User Profile and apply the updates
+        if(userProfileUpdates.getUserProfileType() == UserProfileType.STANDARD)
+        {
+            //Update superclass UserProfile class
+            updatesAmount = updatesAmount + super.updateFrom(userProfileUpdates);
+
+            StandardUserProfile standardUserProfile = (StandardUserProfile) userProfileUpdates;
+
+            String newTestProperty = standardUserProfile.getTestProperty();
+
+            if(newTestProperty != null){this.testProperty = newTestProperty; updatesAmount++;}
+
+        }
+
+        return updatesAmount;
     }
     //endregion
 }

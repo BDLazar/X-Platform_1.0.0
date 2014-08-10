@@ -76,4 +76,14 @@ public abstract class UserProfile {
 
     }
     //endregion
+
+    //region Business Methods
+    public int updateFrom(UserProfile userProfileUpdates)
+    {
+        //do not update id and userProfileType, they should not be changed once initialised
+
+        //return the amount of updates that were applied
+        return 0;
+    }
+    //endregion
 }
