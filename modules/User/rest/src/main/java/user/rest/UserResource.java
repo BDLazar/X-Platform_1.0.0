@@ -1,14 +1,22 @@
 package user.rest;
 
+import common.api.util.Error;
+import common.api.util.Severity;
 import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.slf4j.Logger;
-import user.api.IUserService;
-import user.api.UserAccount;
-import user.api.UserProfile;
+import user.api.data.UserAccount;
+import user.api.exceptions.InvalidUserAccountException;
+import user.api.exceptions.UserAccountFoundException;
+import user.api.exceptions.UserAccountNotFoundException;
+import user.api.services.IUserService;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import static org.slf4j.LoggerFactory.getLogger;
-import javax.ws.rs.*;
-import javax.ws.rs.core.*;
 
 
 @CrossOriginResourceSharing(allowAllOrigins = true) // allows client access to authentication resource from all domains
@@ -43,25 +51,86 @@ public class UserResource {
     {
         try
         {
+            LOGGER.info(RECEIVED_REST_REQUEST, "UserResource.createUserAccount()", uriInfo.getPath());
 
-            LOGGER.info(RECEIVED_REST_REQUEST, "User::CreateUserAccount", uriInfo.getPath());
-
-            UserAccount userAccountCreated = userService.createUserAccount(userAccount);
-
-            if(userAccountCreated != null)
-            {
-                return Response.ok().entity(userAccountCreated.toJson()).build();
-            }
-            else
-            {
-                return Response.ok().entity("Unable to create user account").build();
-            }
-
+            Long userAccountId = userService.createUserAccount(userAccount);
+            UserAccount createdUserAccount = userService.getUserAccount(userAccountId, userAccount.isWithUserProfiles());
+            return Response.ok().entity(createdUserAccount.toJson()).build();
+        }
+        catch (InvalidUserAccountException ex)
+        {
+            Error error = new Error();
+            error.setId("INVALID_USER_ACCOUNT");
+            error.setSeverity(Severity.MEDIUM);
+            error.setTitle("Invalid User Account");
+            error.setSimpleDescription(ex.getMessage());
+            error.setVerboseDescription("");
+            return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+        }
+        catch (UserAccountFoundException ex)
+        {
+            Error error = new Error();
+            error.setId("DUPLICATE_USER_ACCOUNT");
+            error.setSeverity(Severity.LOW);
+            error.setTitle("Duplicate User Account");
+            error.setSimpleDescription(ex.getMessage());
+            error.setVerboseDescription("");
+            return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
         }
         catch (Exception ex)
         {
             LOGGER.error(ERROR_PROCESSING_REST_REQUEST, ex);
-            return createBadRequestResponse(ex);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.toString()).build();
+        }
+        finally
+        {
+            LOGGER.info(FINISHED_PROCESSING_REST_REQUEST, uriInfo.getPath());
+        }
+
+    }
+    //endregion
+
+    //region Get User Account
+    @GET
+    @Path("get/userAccount/{userAccountId}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response getUserAccount(@Context UriInfo uriInfo,
+                                   @PathParam("userAccountId") Long userAccountId,
+                                   @HeaderParam("withUserProfiles") boolean withUserProfiles,
+                                   @HeaderParam("authToken") String authToken)
+    {
+        try
+        {
+            LOGGER.info(RECEIVED_REST_REQUEST, "UserResource.getUserAccount()", uriInfo.getPath());
+            UserAccount existingUserAccount = userService.getUserAccount(userAccountId,withUserProfiles);
+            return Response.ok().entity(existingUserAccount.toJson()).build();
+
+        }
+        catch (InvalidUserAccountException ex)
+        {
+            Error error = new Error();
+            error.setId("INVALID_ID");
+            error.setSeverity(Severity.MEDIUM);
+            error.setTitle("Invalid User Account");
+            error.setSimpleDescription(ex.getMessage());
+            error.setVerboseDescription("");
+            return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+        }
+        catch(UserAccountNotFoundException ex)
+        {
+            Error error = new Error();
+            error.setId("USER_ACCOUNT_NOT_FOUND");
+            error.setSeverity(Severity.MEDIUM);
+            error.setTitle("User Account Not Found");
+            error.setSimpleDescription(ex.getMessage());
+            error.setVerboseDescription("");
+            return Response.status(Response.Status.NOT_FOUND).entity(error.toJson()).build();
+        }
+        catch (Exception ex)
+        {
+            LOGGER.error(ERROR_PROCESSING_REST_REQUEST, ex);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.toString()).build();
         }
         finally
         {
@@ -70,6 +139,8 @@ public class UserResource {
     }
     //endregion
 
+
+    /*
     //region Update User Account
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
@@ -106,41 +177,7 @@ public class UserResource {
 
     //endregion
 
-    //region Get User Account
-    @GET
-    @Path("get/userAccount/{userAccountId}")
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
-    public Response getUserAccount(@Context UriInfo uriInfo,
-                                   @PathParam("userAccountId") Long userAccountId,
-                                   @HeaderParam("withProfiles") boolean withProfiles,
-                                   @HeaderParam("authToken") String authToken)
-    {
-        try
-        {
-            LOGGER.info(RECEIVED_REST_REQUEST, "User::GetUserAccount", uriInfo.getPath());
-            UserAccount existingUserAccount = userService.getUserAccount(userAccountId,withProfiles);
 
-            if(existingUserAccount != null)
-            {
-                return Response.ok().entity(existingUserAccount.toJson()).build();
-            }
-            else
-            {
-                return Response.ok().entity("Unable to retrieve user account").build();
-            }
-        }
-        catch (Exception ex)
-        {
-            LOGGER.error(ERROR_PROCESSING_REST_REQUEST, ex);
-            return createBadRequestResponse(ex);
-        }
-        finally
-        {
-            LOGGER.info(FINISHED_PROCESSING_REST_REQUEST, uriInfo.getPath());
-        }
-    }
-    //endregion
 
     //region Delete User Account
     @DELETE
@@ -324,11 +361,5 @@ public class UserResource {
     //endregion
 
     //endregion
-
-    //region Bad Response
-    private Response createBadRequestResponse(Exception ex){
-        return Response.status(Response.Status.BAD_REQUEST).entity(ex.getMessage()).type(TEXT_PLAIN).build();
-    }
-    //endregion
-
+    */
 }

@@ -1,63 +1,132 @@
 package user.impl;
 
-import user.api.*;
+import user.api.data.UserAccount;
+import user.api.data.UserProfile;
+import user.api.exceptions.InvalidUserAccountException;
+import user.api.exceptions.UserAccountFoundException;
+import user.api.exceptions.UserAccountNotFoundException;
+import user.api.services.IUserService;
 
 
 public class UserService implements IUserService
 {
-    private UserDAO userAccountDAO;
+    private UserDAO userDAO;
 
-    public UserService(UserDAO userAccountDAO) {
-        this.userAccountDAO = userAccountDAO;
+    public UserService(UserDAO userDAO) {
+        this.userDAO = userDAO;
     }
 
     //region User Account
     @Override
-    public UserAccount createUserAccount(UserAccount newUserAccount) {
+    public Long createUserAccount(UserAccount newUserAccount) throws UserAccountFoundException, InvalidUserAccountException {
 
-        /*
-         To create a user account :
-         1) The user account id must null or negative because the id gets automatically generated
-         2) The user account type must not be null because we need to know how to treat the user account specifically
-        */
-        if((newUserAccount.getId() == null || newUserAccount.getId() < 0) && newUserAccount.getUserAccountType() != null)
+        //region Validate New User Account
+        String exceptionMessage = "";
+
+        if(newUserAccount == null)
         {
-            //insert the new userAccount into the database and return the object stored in database (may return null if the object could not be inserted in database)
-            return userAccountDAO.insertUserAccount(newUserAccount);
+            exceptionMessage = exceptionMessage + "User Account must not be null!";
+            throw new InvalidUserAccountException(exceptionMessage);
         }
 
-        //return null if the conditions of creating a new user account were not met
-        return null;
+        if(newUserAccount.getId() != null)
+        {
+            exceptionMessage = exceptionMessage + "User Account ID must be null";
+        }
+
+        if(newUserAccount.getEmail() == null || newUserAccount.getEmail().equals(""))
+        {
+            exceptionMessage = exceptionMessage + ", Email must not be null or empty";
+        }
+
+        if(newUserAccount.getUserAccountType() == null)
+        {
+            exceptionMessage = exceptionMessage + ", Type must not be null";
+        }
+
+        if(newUserAccount.isWithUserProfiles() && (newUserAccount.getUserProfiles() == null || newUserAccount.getUserProfiles().size() == 0))
+        {
+            exceptionMessage = exceptionMessage + ", user profiles flag must be false";
+        }
+        else if(!newUserAccount.isWithUserProfiles() && (newUserAccount.getUserProfiles() != null && newUserAccount.getUserProfiles().size() > 0))
+        {
+            exceptionMessage = exceptionMessage + ", user profiles flag must be true";
+        }
+
+        if(newUserAccount.isWithUserProfiles())
+        {
+            for(Long userProfileKey : newUserAccount.getUserProfiles().keySet())
+            {
+                UserProfile newUserProfile = newUserAccount.getUserProfiles().get(userProfileKey);
+                //check the profile ids
+                if(newUserProfile.getId() != null)
+                {
+                    exceptionMessage = exceptionMessage + " ,user profile with key " + userProfileKey + " ID must be null";
+                }
+                //check the profile types
+                if(newUserProfile.getUserProfileType() == null)
+                {
+                    exceptionMessage = exceptionMessage + " ,user profile type with key " + userProfileKey + " must not be null";
+                }
+            }
+        }
+
+        if(!exceptionMessage.equals("Invalid New User Account: "))
+        {
+            throw new InvalidUserAccountException(exceptionMessage);
+        }
+        //endregion
+
+        //region Insert New User Account into Database
+         return userDAO.insertUserAccount(newUserAccount);
+        //endregion
     }
 
     @Override
-    public UserAccount updateUserAccount(UserAccount userAccountUpdates) {
+    public UserAccount getUserAccount(Long userAccountId, boolean withUserProfiles) throws UserAccountNotFoundException, InvalidUserAccountException {
 
-       /*
-         To updateUserAccount a user account :
-         1) The id must be positive because we are going to look for an existing user account in the database using the id
-         2) The user account type must not be null because we need to know how to treat the user account specifically
-        */
-        if(userAccountUpdates.getId() != null && userAccountUpdates.getId() > 0 && userAccountUpdates.getUserAccountType() != null)
+        //region Validate parameters
+        if(userAccountId == null)
         {
-            return userAccountDAO.updateUserAccount(userAccountUpdates);
+            throw new InvalidUserAccountException("User Account Id must not be null ");
+        }
+        //endregion
+
+        //region Retrieve User Account from Database
+         return userDAO.getUserAccount(userAccountId, withUserProfiles);
+        //endregion
+    }
+
+/*
+    @Override
+    public Long updateUserAccount(UserAccount userAccountUpdates) throws UserServiceException {
+
+
+        //do security checks
+        WarnErrReport securityReport = userSecurity.validateUpdateUserAccount(userAccountUpdates);
+        if(securityReport.getGrade() == ReportGrade.FAIL)
+        {
+            throw new UserServiceException("User Service security check failed, see report for details", securityReport);
         }
 
-        //return null if the conditions of updating an existing user account were not met
-        return null;
+        //do database transaction
+        WarnErrReport daoReport = userDAO.updateUserAccount(userAccountUpdates);
+        if(daoReport.getGrade() == ReportGrade.FAIL)
+        {
+            throw new UserServiceException("User Database transaction failed, see report for details", daoReport);
+        }
+
+         //return the user account we just updated
+         return userDAO.getUserAccount(userAccountUpdates.getId(),userAccountUpdates.isWithUserProfiles());
+
     }
 
-    @Override
-    public UserAccount getUserAccount(Long userAccountId, boolean loadUserProfiles) {
 
-        return userAccountDAO.getUserAccount(userAccountId, loadUserProfiles);
-
-    }
 
     @Override
     public boolean deleteUserAccount(Long id) {
 
-        return userAccountDAO.deleteUserAccount(id);
+        return userDAO.deleteUserAccount(id);
     }
     //endregion
 
@@ -65,22 +134,26 @@ public class UserService implements IUserService
     @Override
     public UserProfile createUserProfile(Long userAccountId, UserProfile newUserProfile) {
 
-        return userAccountDAO.insertUserProfile(userAccountId,newUserProfile);
+        if(userDAO.insertUserProfile(userAccountId,newUserProfile))
+        {
+            return userDAO.getUserProfile(new)
+        }
     }
 
     @Override
     public UserProfile updateUserProfile(UserProfile userProfileUpdates) {
-        return userAccountDAO.updateUserProfile(userProfileUpdates);
+        return userDAO.updateUserProfile(userProfileUpdates);
     }
 
     @Override
     public UserProfile getUserProfile(Long profileId) {
-        return userAccountDAO.getUserProfile(profileId);
+        return userDAO.getUserProfile(profileId);
     }
 
     @Override
     public boolean deleteUserProfile(Long userAccountId, Long userProfileId) {
-       return userAccountDAO.deleteUserProfile(userAccountId,userProfileId);
+       return userDAO.deleteUserProfile(userAccountId,userProfileId);
     }
     //endregion
+    */
 }
