@@ -1,4 +1,4 @@
-package user.api;
+package user.api.data;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -8,7 +8,6 @@ import org.codehaus.jackson.node.ObjectNode;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import java.util.Iterator;
 
 
 @Entity
@@ -46,16 +45,9 @@ public class StandardUserProfile extends UserProfile{
 
         try {
 
-            //serialise superclass
-            JsonNode superJsonObj = super.toJson();
-
-            //Serialise subclass
             ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
             String jsonString = objectWriter.writeValueAsString(this);
-            JsonNode subJsonObj = jsonMapper.readTree(jsonString);
-
-            //merge subclass and superclass
-            JsonNode jsonObj = mergeJsonNodes(superJsonObj,subJsonObj);
+            JsonNode jsonObj = jsonMapper.readTree(jsonString);
 
             return (ObjectNode)jsonObj;
 
@@ -64,31 +56,6 @@ public class StandardUserProfile extends UserProfile{
             return null;
         }
 
-    }
-    private static JsonNode mergeJsonNodes(JsonNode mainNode, JsonNode updateNode){
-        Iterator<String> fieldNames = updateNode.getFieldNames();
-
-        while (fieldNames.hasNext()) {
-
-            String fieldName = fieldNames.next();
-            JsonNode jsonNode = mainNode.get(fieldName);
-
-            // if field exists and is an embedded object
-            if (jsonNode != null && jsonNode.isObject())
-            {
-                mergeJsonNodes(jsonNode, updateNode.get(fieldName));
-            }
-            else
-            {
-                if (mainNode instanceof ObjectNode) {
-                    // Overwrite field
-                    JsonNode value = updateNode.get(fieldName);
-                    ((ObjectNode) mainNode).put(fieldName, value);
-                }
-            }
-        }
-
-        return mainNode;
     }
     //endregion
 

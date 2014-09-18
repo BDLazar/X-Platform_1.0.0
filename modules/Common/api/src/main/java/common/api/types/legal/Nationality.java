@@ -1,4 +1,6 @@
-package common.api;
+package common.api.types.legal;
+
+import common.api.types.geography.Country;
 
 public enum Nationality {
 

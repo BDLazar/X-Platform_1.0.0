@@ -16,7 +16,7 @@
     </bean>
 
     <!--Reference to User Service already registered with OSGI Service registry-->
-    <reference id="UserService" interface="user.api.IUserService"/>
+    <reference id="UserService" interface="user.api.services.IUserService"/>
 
     <!--Initialise rest cxf bus-->
     <cxf:bus>

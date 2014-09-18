@@ -1,4 +1,4 @@
-package common.api;
+package common.api.types.finance;
 
 /**
  * Created by Onis on 11/07/14.

@@ -4,8 +4,8 @@
            xmlns:tx="http://aries.apache.org/xmlns/transactions/v1.0.0">
 
     <!--Json Serialiser Service-->
-    <service id="JSONSerialiserService" interface="common.api.IJSONSerialiserService">
-        <bean class="common.impl.JSONSerialiserService"></bean>
+    <service id="JSONSerialiserService" interface="common.api.serialisers.IJSONSerialiserService">
+        <bean class="common.impl.serialisers.JSONSerialiserService"></bean>
     </service>
 
 </blueprint>

@@ -1,4 +1,4 @@
-package user.api;
+package user.api.data;
 
 public enum UserProfileType {
     BASIC,

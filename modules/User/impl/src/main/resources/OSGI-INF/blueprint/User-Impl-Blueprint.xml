@@ -4,7 +4,7 @@
            xmlns:tx="http://aries.apache.org/xmlns/transactions/v1.0.0">
 
     <!--User Service-->
-    <service id="UserAccountService" interface="user.api.IUserService">
+    <service id="UserAccountService" interface="user.api.services.IUserService">
         <bean class="user.impl.UserService">
             <argument ref="UserDAO"/>
         </bean>

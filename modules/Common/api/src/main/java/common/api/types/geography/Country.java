@@ -1,10 +1,12 @@
-package common.api;
+package common.api.types.geography;
 
+
+import common.api.types.finance.Currency;
 
 public enum Country
 {
     //TODO create all countries
-    ALBANIA("Albania","AL","ALB",355,Continent.EUROPE,Currency.ALL),
+    ALBANIA("Albania","AL","ALB",355,Continent.EUROPE, Currency.ALL),
     ANDORRA("Andorra","AN","AND",376, Continent.EUROPE, Currency.EUR),
     USA("United States","US","USA",376, Continent.EUROPE, Currency.USD),
     IRELAND("Ireland","IE","IRE",353, Continent.EUROPE, Currency.EUR);

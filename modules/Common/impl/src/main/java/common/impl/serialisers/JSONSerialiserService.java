@@ -1,6 +1,6 @@
-package common.impl;
+package common.impl.serialisers;
 
-import common.api.IJSONSerialiserService;
+import common.api.serialisers.IJSONSerialiserService;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
@@ -63,4 +63,6 @@ public class JSONSerialiserService implements IJSONSerialiserService{
 
         return mainNode;
     }
+
+
 }

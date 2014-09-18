@@ -1,13 +1,12 @@
-package user.api;
+package user.api.data;
 
-import org.codehaus.jackson.JsonNode;
-        import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectMapper;
         import org.codehaus.jackson.map.ObjectWriter;
         import org.codehaus.jackson.node.ObjectNode;
-        import javax.persistence.Entity;
+
+import javax.persistence.Entity;
         import javax.persistence.PrimaryKeyJoinColumn;
         import javax.persistence.Table;
-        import java.util.Iterator;
 
 @Entity
 @Table(name="STANDARD_USER_ACCOUNT")
@@ -43,53 +42,54 @@ public class StandardUserAccount extends UserAccount{
     @Override
     public ObjectNode toJson(){
 
+        /*we do manual serialisation because some properties have been lazy loaded
+          so we need to ignore them to avoid the JPA lazy loading initialisation exception*/
+
         ObjectMapper jsonMapper = new ObjectMapper();
+        ObjectNode jsonObj = jsonMapper.createObjectNode();
 
-        try {
-
-            //serialise superclass
-            JsonNode superJsonObj = super.toJson();
-
-            //Serialise subclass
-            ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
-            String jsonString = objectWriter.writeValueAsString(this);
-            JsonNode subJsonObj = jsonMapper.readTree(jsonString);
-
-            //merge subclass and superclass
-            JsonNode jsonObj = mergeJsonNodes(superJsonObj,subJsonObj);
-
-            return (ObjectNode)jsonObj;
-
-        } catch (Exception ex){
-
-            return null;
+        jsonObj.put("id", super.getId());
+        if(this.getUserAccountType() == null)
+        {
+            jsonObj.put("userAccountType",jsonObj.nullNode());
+        }
+        else
+        {
+            jsonObj.put("userAccountType",this.getUserAccountType().name());
         }
 
-    }
-    private static JsonNode mergeJsonNodes(JsonNode mainNode, JsonNode updateNode){
-        Iterator<String> fieldNames = updateNode.getFieldNames();
+        //serialise the user profiles if they were loaded only
+        if(super.isWithUserProfiles())
+        {
+            ObjectNode userProfilesAsJson = null;
+            try {
 
-        while (fieldNames.hasNext()) {
+                ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+                String jsonString = objectWriter.writeValueAsString(this.getUserProfiles());
+                userProfilesAsJson = (ObjectNode)jsonMapper.readTree(jsonString);
 
-            String fieldName = fieldNames.next();
-            JsonNode jsonNode = mainNode.get(fieldName);
+            } catch (Exception ex){
 
-            // if field exists and is an embedded object
-            if (jsonNode != null && jsonNode.isObject())
-            {
-                mergeJsonNodes(jsonNode, updateNode.get(fieldName));
+                userProfilesAsJson = jsonMapper.createObjectNode();
+
             }
-            else
-            {
-                if (mainNode instanceof ObjectNode) {
-                    // Overwrite field
-                    JsonNode value = updateNode.get(fieldName);
-                    ((ObjectNode) mainNode).put(fieldName, value);
-                }
-            }
+
+            jsonObj.put("userProfiles",userProfilesAsJson);
+        }
+        //serialise user profiles map as an empty object if the profiles were not loaded
+        else
+        {
+
+            jsonObj.put("userProfiles",jsonMapper.createObjectNode());
+
         }
 
-        return mainNode;
+        jsonObj.put("withUserProfiles", super.isWithUserProfiles());
+
+        jsonObj.put("testProperty", this.testProperty);
+
+        return jsonObj;
+
     }
     //endregion
 

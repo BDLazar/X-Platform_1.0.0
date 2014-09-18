@@ -1,4 +1,4 @@
-package common.api;
+package common.api.serialisers;
 
 import org.codehaus.jackson.JsonNode;
 

@@ -1,4 +1,4 @@
-package common.api;
+package common.api.types.geography;
 
 public enum City {
 

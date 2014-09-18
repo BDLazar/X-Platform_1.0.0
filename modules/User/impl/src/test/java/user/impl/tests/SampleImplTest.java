@@ -1,4 +1,4 @@
-package useraccount.impl.tests;
+package user.impl.tests;
 
 public class SampleImplTest {
 }

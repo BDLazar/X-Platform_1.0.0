@@ -1,10 +1,7 @@
-package user.api;
+package user.api.data;
 
-import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.annotate.JsonSubTypes;
 import org.codehaus.jackson.annotate.JsonTypeInfo;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.node.ObjectNode;
 
 import javax.persistence.*;
@@ -28,6 +25,9 @@ public abstract class UserProfile {
 
     @Enumerated(EnumType.STRING)
     private UserProfileType userProfileType;
+
+    private String userName;
+
     //endregion
 
     //region Constructors
@@ -52,29 +52,22 @@ public abstract class UserProfile {
         return userProfileType;
     }
 
-    public void setUserProfileTypeserProfileType(UserProfileType type) {
+    public void setUserProfileType(UserProfileType userProfileType) {
         this.userProfileType = userProfileType;
     }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     //endregion
 
     //region Parsers
-    public ObjectNode toJson(){
-
-        ObjectMapper jsonMapper = new ObjectMapper();
-
-        try {
-
-            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-            String jsonString = ow.writeValueAsString(this);
-            JsonNode jsonNode = jsonMapper.readTree(jsonString);
-            return (ObjectNode)jsonNode;
-
-        } catch (Exception ex){
-
-            return null;
-        }
-
-    }
+    public abstract ObjectNode toJson();
     //endregion
 
     //region Business Methods
@@ -82,8 +75,14 @@ public abstract class UserProfile {
     {
         //do not update id and userProfileType, they should not be changed once initialised
 
+        int updatesAmount = 0;
+
+        String newUserName = userProfileUpdates.getUserName();
+
+        if (newUserName != null) {this.userName = newUserName; updatesAmount++;}
+
         //return the amount of updates that were applied
-        return 0;
+        return updatesAmount;
     }
     //endregion
 }
