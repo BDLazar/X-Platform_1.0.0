@@ -5,7 +5,9 @@ import common.api.util.Severity;
 import org.apache.cxf.rs.security.cors.CrossOriginResourceSharing;
 import org.slf4j.Logger;
 import user.api.data.UserAccount;
+import user.api.data.UserSession;
 import user.api.exceptions.InvalidUserAccountException;
+import user.api.exceptions.InvalidUserCredentialsException;
 import user.api.exceptions.UserAccountFoundException;
 import user.api.exceptions.UserAccountNotFoundException;
 import user.api.services.IUserService;
@@ -51,11 +53,10 @@ public class UserResource {
     {
         try
         {
-            LOGGER.info(RECEIVED_REST_REQUEST, "UserResource.createUserAccount()", uriInfo.getPath());
+            LOGGER.info(RECEIVED_REST_REQUEST, "UserResource::createUserAccount()", uriInfo.getPath());
 
             Long userAccountId = userService.createUserAccount(userAccount);
-            UserAccount createdUserAccount = userService.getUserAccount(userAccountId, userAccount.isWithUserProfiles());
-            return Response.ok().entity(createdUserAccount.toJson()).build();
+            return Response.ok().build();
         }
         catch (InvalidUserAccountException ex)
         {
@@ -98,7 +99,7 @@ public class UserResource {
     public Response getUserAccount(@Context UriInfo uriInfo,
                                    @PathParam("userAccountId") Long userAccountId,
                                    @HeaderParam("withUserProfiles") boolean withUserProfiles,
-                                   @HeaderParam("authToken") String authToken)
+                                   @HeaderParam("token") String token)
     {
         try
         {
@@ -139,6 +140,76 @@ public class UserResource {
     }
     //endregion
 
+    //endregion
+
+    //region Login
+    @GET
+    @Path("login")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response login(@Context UriInfo uriInfo, @HeaderParam("email") String email, @HeaderParam("password") String password)
+    {
+        try
+        {
+            LOGGER.info(RECEIVED_REST_REQUEST, "User::login", uriInfo.getPath());
+            UserSession userSession = userService.login(email,password);
+            return Response.ok().entity(userSession.toJson()).build();
+        }
+        catch (InvalidUserCredentialsException ex)
+        {
+            Error error = new Error();
+            error.setId("INVALID_USER_CREDENTIALS");
+            error.setSeverity(Severity.LOW);
+            error.setTitle("Invalid User Credentials");
+            error.setSimpleDescription(ex.getMessage());
+            error.setVerboseDescription("");
+            return Response.status(Response.Status.BAD_REQUEST).entity(error.toJson()).build();
+        }
+        catch (Exception ex)
+        {
+            LOGGER.error(ERROR_PROCESSING_REST_REQUEST, ex);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.toString()).build();
+        }
+        finally
+        {
+            LOGGER.info(FINISHED_PROCESSING_REST_REQUEST, uriInfo.getPath());
+        }
+    }
+    //endregion
+
+    //region Validate User Session
+    @GET
+    @Path("validate/session")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response validateUserSession(@Context UriInfo uriInfo, @HeaderParam("token") String token, @HeaderParam("userAccountId") Long userAccountId)
+    {
+        try
+        {
+            LOGGER.info(RECEIVED_REST_REQUEST, "User::validateSession", uriInfo.getPath());
+
+            UserSession userSession = new UserSession(userAccountId,token);
+            if(userService.validateUserSession(userSession))
+            {
+                //we return the session back if it is still valid
+                return Response.ok().entity(userSession).build();
+            }
+            else
+            {
+                //We return back an empty user session if the session is not valid anymore
+                return Response.ok().entity(new UserSession().toJson()).build();
+            }
+
+        }
+        catch (Exception ex)
+        {
+            LOGGER.error(ERROR_PROCESSING_REST_REQUEST, ex);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(ex.toString()).build();
+        }
+        finally
+        {
+            LOGGER.info(FINISHED_PROCESSING_REST_REQUEST, uriInfo.getPath());
+        }
+    }
+    //endregion
 
     /*
     //region Update User Account

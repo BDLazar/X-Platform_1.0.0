@@ -2,7 +2,9 @@ package user.impl;
 
 import user.api.data.UserAccount;
 import user.api.data.UserProfile;
+import user.api.data.UserSession;
 import user.api.exceptions.InvalidUserAccountException;
+import user.api.exceptions.InvalidUserCredentialsException;
 import user.api.exceptions.UserAccountFoundException;
 import user.api.exceptions.UserAccountNotFoundException;
 import user.api.services.IUserService;
@@ -21,7 +23,7 @@ public class UserService implements IUserService
     public Long createUserAccount(UserAccount newUserAccount) throws UserAccountFoundException, InvalidUserAccountException {
 
         //region Validate New User Account
-        String exceptionMessage = "";
+        String exceptionMessage = "Invalid New User Account: ";
 
         if(newUserAccount == null)
         {
@@ -97,6 +99,20 @@ public class UserService implements IUserService
         //endregion
     }
 
+    @Override
+    public UserAccount getUserAccount(String email, boolean withUserProfiles) throws UserAccountNotFoundException, InvalidUserAccountException {
+        //region Validate parameters
+        if(email == null)
+        {
+            throw new InvalidUserAccountException("User Account email must not be null ");
+        }
+        //endregion
+
+        //region Retrieve User Account from Database
+        return userDAO.getUserAccount(email, withUserProfiles);
+        //endregion
+    }
+
 /*
     @Override
     public Long updateUserAccount(UserAccount userAccountUpdates) throws UserServiceException {
@@ -156,4 +172,41 @@ public class UserService implements IUserService
     }
     //endregion
     */
+
+    @Override
+    public UserSession login(String email, String password) throws InvalidUserCredentialsException {
+
+        try
+        {
+            UserAccount userAccount = this.getUserAccount(email, false);
+            if(userAccount != null && userAccount.getEmail().equals(email) && userAccount.getPassword().equals(password) )
+            {
+                return new UserSession(userAccount.getId(), generateUserToken(userAccount));
+            }
+        }
+        catch (UserAccountNotFoundException ex)
+        {
+            throw new InvalidUserCredentialsException("No user with matching credentials found");
+        }
+        catch (InvalidUserAccountException ex)
+        {
+            throw new InvalidUserCredentialsException("Invalid user credentials");
+        }
+
+        return null;
+    }
+
+    @Override
+    public String generateUserToken(UserAccount userAccount) {
+
+        //TODO GENERATE UNIQUE TOKEN
+        return "abc123";
+    }
+
+    @Override
+    public boolean validateUserSession(UserSession userSession) {
+
+        //TODO IMPLEMENT
+        return userSession.getToken() != null && userSession.getToken().equals("abc123");
+    }
 }
