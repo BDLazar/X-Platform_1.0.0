@@ -20,7 +20,6 @@
 
     <modules>
         <module>Common</module>
-		<module>Authentication</module>
 		<module>Persistence</module>
         <module>User</module>
         <module>Profile</module>
